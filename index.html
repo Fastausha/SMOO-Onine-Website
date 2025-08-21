@@ -11,18 +11,35 @@
       text-align: center;
       padding: 20px;
     }
-    /* Tiny hidden player (not display:none) */
+
+    /* Tiny hidden player */
     #player {
       width: 1px;
       height: 1px;
       opacity: 0;
       position: absolute;
-      left: -9999px; /* move it off screen */
+      left: -9999px;
     }
+
     #current-song {
       font-size: 1.5em;
       margin-top: 20px;
       color: #00ff88;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      background: #00ff88;
+      color: #111;
+    }
+
+    button:hover {
+      background: #00cc66;
     }
   </style>
 </head>
@@ -30,10 +47,13 @@
   <h1>🎶 Now Playing</h1>
   <div id="current-song">Loading...</div>
 
+  <button id="mute-btn">Mute 🔇</button>
+
   <div id="player"></div>
 
   <script>
     let player;
+    let isMuted = false;
 
     // Load YouTube API
     let tag = document.createElement('script');
@@ -49,10 +69,17 @@
           list: 'PLQIfsEcMHP1EDnAYM8tAksp8noGmoxUO3',
           autoplay: 1,
           controls: 0,
-          modestbranding: 1
+          modestbranding: 1,
+          loop: 1,
+          shuffle: 1 // enable shuffle
         },
         events: {
-          'onReady': (event) => event.target.playVideo(),
+          'onReady': (event) => {
+            event.target.playVideo();
+            event.target.mute(); // start muted (optional)
+            isMuted = true;
+            document.getElementById("mute-btn").innerText = "Unmute 🔊";
+          },
           'onStateChange': onPlayerStateChange
         }
       });
@@ -64,6 +91,19 @@
         document.getElementById("current-song").innerText = videoData.title;
       }
     }
+
+    // Mute/Unmute toggle
+    document.getElementById("mute-btn").addEventListener("click", () => {
+      if (isMuted) {
+        player.unMute();
+        isMuted = false;
+        document.getElementById("mute-btn").innerText = "Mute 🔇";
+      } else {
+        player.mute();
+        isMuted = true;
+        document.getElementById("mute-btn").innerText = "Unmute 🔊";
+      }
+    });
   </script>
 </body>
 </html>

@@ -11,7 +11,14 @@
       text-align: center;
       padding: 20px;
     }
-    #player { display: none; } /* DONT Change this This effects if the video is shown.  */
+    /* Tiny hidden player (not display:none) */
+    #player {
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      position: absolute;
+      left: -9999px; /* move it off screen */
+    }
     #current-song {
       font-size: 1.5em;
       margin-top: 20px;
@@ -28,20 +35,24 @@
   <script>
     let player;
 
-// Load YouTube API
+    // Load YouTube API
     let tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.body.appendChild(tag);
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
-        height: '0',
-        width: '0',
+        height: '1',
+        width: '1',
         playerVars: {
           listType: 'playlist',
-          list: 'PLQIfsEcMHP1EDnAYM8tAksp8noGmoxUO3', 
+          list: 'PLQIfsEcMHP1EDnAYM8tAksp8noGmoxUO3',
+          autoplay: 1,
+          controls: 0,
+          modestbranding: 1
         },
         events: {
+          'onReady': (event) => event.target.playVideo(),
           'onStateChange': onPlayerStateChange
         }
       });

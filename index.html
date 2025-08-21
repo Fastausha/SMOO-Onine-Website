@@ -28,7 +28,7 @@
     }
 
     button {
-      margin-top: 20px;
+      margin: 10px;
       padding: 10px 20px;
       border: none;
       border-radius: 8px;
@@ -48,6 +48,7 @@
   <div id="current-song">Loading...</div>
 
   <button id="mute-btn">Mute 🔇</button>
+  <button id="skip-btn">Skip ⏭️</button>
 
   <div id="player"></div>
 
@@ -70,19 +71,30 @@
           autoplay: 1,
           controls: 0,
           modestbranding: 1,
-          loop: 1,
-          shuffle: 1 // enable shuffle
+          loop: 1
         },
         events: {
-          'onReady': (event) => {
-            event.target.playVideo();
-            event.target.mute(); // start muted (optional)
-            isMuted = true;
-            document.getElementById("mute-btn").innerText = "Unmute 🔊";
-          },
+          'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
         }
       });
+    }
+
+    function onPlayerReady(event) {
+      // Start playback
+      event.target.playVideo();
+
+      // Jump to random index for shuffle effect
+      const playlist = player.getPlaylist();
+      if (playlist && playlist.length > 0) {
+        const randomIndex = Math.floor(Math.random() * playlist.length);
+        player.playVideoAt(randomIndex);
+      }
+
+      // Start muted (optional)
+      player.mute();
+      isMuted = true;
+      document.getElementById("mute-btn").innerText = "Unmute 🔊";
     }
 
     function onPlayerStateChange(event) {
@@ -103,6 +115,11 @@
         isMuted = true;
         document.getElementById("mute-btn").innerText = "Unmute 🔊";
       }
+    });
+
+    // Skip button
+    document.getElementById("skip-btn").addEventListener("click", () => {
+      player.nextVideo();
     });
   </script>
 </body>

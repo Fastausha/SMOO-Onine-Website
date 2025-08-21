@@ -11,7 +11,7 @@
       text-align: center;
       padding: 20px;
     }
-    #player { display: none; } /* hide actual video */
+    #player { display: none; } /* DONT Change this This effects if the video is shown.  */
     #current-song {
       font-size: 1.5em;
       margin-top: 20px;
@@ -23,13 +23,12 @@
   <h1>🎶 Now Playing</h1>
   <div id="current-song">Loading...</div>
 
-  <!-- YouTube Player -->
   <div id="player"></div>
 
   <script>
     let player;
 
-    // Load YouTube API
+// Load YouTube API
     let tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.body.appendChild(tag);
@@ -40,8 +39,7 @@
         width: '0',
         playerVars: {
           listType: 'playlist',
-          list: 'YOUR_PLAYLIST_ID_HERE', // Replace with your playlist ID
-          autoplay: 1
+          list: 'PLQIfsEcMHP1EDnAYM8tAksp8noGmoxUO3', 
         },
         events: {
           'onStateChange': onPlayerStateChange

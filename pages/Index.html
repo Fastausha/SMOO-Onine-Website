@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Obs Song Player (for me)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    #player { display: none; } /* hide actual video */
+    #current-song {
+      font-size: 1.5em;
+      margin-top: 20px;
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎶 Now Playing</h1>
+  <div id="current-song">Loading...</div>
+
+  <!-- YouTube Player -->
+  <div id="player"></div>
+
+  <script>
+    let player;
+
+    // Load YouTube API
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        playerVars: {
+          listType: 'playlist',
+          list: 'YOUR_PLAYLIST_ID_HERE', // Replace with your playlist ID
+          autoplay: 1
+        },
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        let videoData = player.getVideoData();
+        document.getElementById("current-song").innerText = videoData.title;
+      }
+    }
+  </script>
+</body>
+</html>
